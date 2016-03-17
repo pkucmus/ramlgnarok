@@ -24,6 +24,8 @@ setup(
     ),
     install_requires=[
         'ramlfications==0.1.9',
+        'Pygments',
+        'Markdown',
     ],
     classifiers=[
         'Environment :: Web Environment',

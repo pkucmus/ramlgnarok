@@ -2,7 +2,6 @@ from urllib.parse import urlsplit, urlunsplit
 from collections import OrderedDict
 
 from django.views.generic import TemplateView
-from django.template.loader import render_to_string
 
 import ramlfications
 
@@ -15,19 +14,10 @@ def get_base_uri(request):
 
 
 class RAMLDocs(TemplateView):
-    template_name = 'raml_docs_base.html'
+    template_name = 'base.html'
 
     def parse(self, raml_file, override_file=None):
-        raml = render_to_string(
-            'raml/{}.raml'.format(raml_file),
-            {'base_url': get_base_uri(self.request)}
-        )
-        override_raml = None
-        if override_file:
-            override_raml = render_to_string(
-                'raml/overrides/{}.raml'.format(override_file),
-            )
-        loader = RAMLgnarokLoader().load(raml, override_raml)
+        loader = RAMLgnarokLoader().load(raml_file)
         config = ramlfications.setup_config(None)
         api = ramlfications.parse_raml(loader, config)
 
@@ -44,7 +34,6 @@ class RAMLDocs(TemplateView):
                 resources[resource.path].methods[resource.method] = resource
             else:
                 resources[resource.path] = resource
-
         return {'api': api, 'resources': resources}
 
     def get_context_data(self, **kwargs):

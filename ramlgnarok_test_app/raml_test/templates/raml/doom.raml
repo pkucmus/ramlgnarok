@@ -1,0 +1,39 @@
+a: !extends acme.raml
+
+/books:
+  description: |
+    **Nice desc**
+  get:
+    queryParameters:
+      author:
+        displayName: Author
+        type: string
+        description: An author's full name
+        example: Ka Ka
+        required: true
+  put:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "mama": "Ula"
+          }
+
+  /{bookTitle}:
+    get:
+    put:
+      body:
+        application/xml:
+          example: |
+            <xml attibute="deeply">I don't like xml's</xml>
+    delete:
+      /author:
+      get:
+      /publisher:
+      get:
+
+/call:
+  /me:
+    /baby:
+      get:

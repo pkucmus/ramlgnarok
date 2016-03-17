@@ -1,0 +1,97 @@
+{% load static %}
+{% load markdown %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ api.title }} | {{ api.version }}</title>
+    <link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/code_hilite/monokai.css' %}">
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div class="container">
+          <h2 class="lone-header">{{ api.title }}</h2>
+        </div>
+      </header>
+      <section>
+        <div class="container">
+          <ul class="docs-nav">
+            <li><strong>Introduction</strong></li>
+            {% for document in api.documentation %}
+              <li><a href="#{{ document.title|slugify }}" class="cc-active">{{ document.title }}</a></li>
+            {% endfor %}
+            <li class="separator"></li>
+            <li><strong>Reference</strong></li>
+            {% for resource in resources %}
+              <li><a href="#{{ resource|slugify }}" class="cc-active">{{ resource }}</a></li>
+            {% endfor %}
+          </ul>
+          <div class="docs-content">
+            <h2> Introduction</h2>
+            {% for document in api.documentation %}
+            <h3 id="{{ document.title|slugify }}"> {{ document.title }}</h3>
+            {{ document.content.raw|md }}
+            {% endfor %}
+
+            <h2> Reference</h2>
+            {% for resource in resources.values %}
+              <h3 id="{{ resource.path|slugify }}">{{ resource.path }}</h3>
+              {{ resource.description.raw|md }}
+
+              {% if resource.query_params %}
+                <h4>Query Params</h4>
+                <table>
+                  <thead>
+                    <th>name</th>
+                    <th>type</th>
+                    <th>example</th>
+                    <th>required</th>
+                  </thead>
+                  <tbody>
+                    {% for query_param in resource.query_params %}
+                      <td>{{ query_param.name }}</td>
+                      <td>{{ query_param.type }}</td>
+                      <td>{{ query_param.example }}</td>
+                      <td>{{ query_param.required }}</td>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% endif %}
+
+              {% if resource.method %}
+                <h4>Methods</h4>
+                <ul>
+                {% for method in resource.methods.values %}
+                  <li>
+                    {{ method.method }}
+                    {{ method.body.0|example }}
+                  </li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+
+
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      <section class="vibrant centered">
+        <div class="">
+          <h4> This documentation template is provided by <a href="http://www.frittt.com" target="_blank">Frittt Templates</a>. You can download and use this template for free. If you have used this template, please pay the developer's effort by Tweeting, sharing on Facebook, social mention or with a linkback. Enjoy! :)</h4>
+        </div>
+      </section>
+      <footer>
+        <div class="">
+          <p> &copy; Copyright Frittt Templates. All Rights Reserved.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

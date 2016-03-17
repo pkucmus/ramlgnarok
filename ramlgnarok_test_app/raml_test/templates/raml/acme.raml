@@ -1,4 +1,4 @@
-base: !extends api.raml
+base: !extends base.raml
 title: Acme API 3
 version: 3
 
@@ -17,17 +17,5 @@ version: 3
       application/json:
         example: |
           {
-            "mama": "tata"
+            "mama": "Ula"
           }
-  /{bookTitle}:
-    get:
-      queryParameters:
-        author:
-          displayName: Author
-          type: string
-          description: An author's full name
-          example: Ka Ka
-          required: true
-
-/tata:
-  post:
