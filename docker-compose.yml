@@ -1,0 +1,13 @@
+version: '2'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ramlgnarok_test_app/devel.Dockerfile
+    volumes:
+      - "./ramlgnarok_test_app:/run/service"
+      - ".:/run/ramlgnarok"
+    stdin_open: True
+    tty: True
+    ports:
+      - "8000:8000"

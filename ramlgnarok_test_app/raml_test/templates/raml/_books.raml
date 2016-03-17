@@ -1,0 +1,44 @@
+{% load raml %}
+
+/books:
+  override: '123'
+  get:
+    queryParameters:
+      author:
+        displayName: Author
+        type: string
+        description: An author's full name
+        example: Mary Roach
+        required: false
+      publicationYear:
+        displayName: Pub Year
+        type: number
+        description: The year released for the first time in the US
+        example: 1984
+        required: false
+      rating:
+        displayName: Rating
+        type: number
+        description: Average rating (1-5) submitted by users
+        example: 3.14
+        required: false
+      isbn:
+        displayName: ISBN
+        type: string
+        minLength: 10
+        example: 0321736079?
+  put:
+  post:
+    body:
+      application/json:
+        example: |
+          {% override '/books.post.body.application/json.example' %}
+  /{bookTitle}:
+    get:
+    put:
+    delete:
+      /author:
+      get:
+      /publisher:
+      get:
+

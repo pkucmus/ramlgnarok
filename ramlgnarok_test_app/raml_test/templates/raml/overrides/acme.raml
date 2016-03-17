@@ -1,0 +1,33 @@
+
+title: Acme API 3
+version: 3
+
+/books:
+  get:
+    queryParameters:
+      author:
+        displayName: Author
+        type: string
+        description: An author's full name
+        example: Ka Ka
+        required: true
+  put:
+  post:
+    body:
+      application/json:
+        example: |
+          {
+            "mama": "tata"
+          }
+  /{bookTitle}:
+    get:
+      queryParameters:
+        author:
+          displayName: Author
+          type: string
+          description: An author's full name
+          example: Ka Ka
+          required: true
+
+/tata:
+  post:
