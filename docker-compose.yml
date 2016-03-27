@@ -11,3 +11,10 @@ services:
     tty: True
     ports:
       - "8000:8000"
+
+  sass:
+    image: ubuntudesign/sass
+    volumes:
+      - "./ramlgnarok/static/:/run/static"
+    working_dir: /run/static
+    command: sass --watch sass:css

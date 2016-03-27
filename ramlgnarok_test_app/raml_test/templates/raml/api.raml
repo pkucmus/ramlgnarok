@@ -8,52 +8,259 @@ documentation:
     content: |
       ###Hello
       I am a `firendly` *API*.
+
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
   - title: Authentication
     content: |
       Documentaion content.
 
-/books:
-  get:
-    queryParameters:
-      author:
-        displayName: Author
-        type: string
-        description: An author's full name
-        example: Mary Roach
-        required: false
-      publicationYear:
-        displayName: Pub Year
-        type: number
-        description: The year released for the first time in the US
-        example: 1984
-        required: false
-      rating:
-        displayName: Rating
-        type: number
-        description: Average rating (1-5) submitted by users
-        example: 3.14
-        required: false
-      isbn:
-        displayName: ISBN
-        type: string
-        minLength: 10
-        example: 0321736079?
-  put:
+/products:
+  displayName: Products
+  description: A collection of products
   post:
+    description: Create a product
     body:
       application/json:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "product": {
+                "name": {
+                    "required": true,
+                    "type": "string"
+                },
+                "description": {
+                    "required": true,
+                    "type": "string"
+                },
+                "url": {
+                    "required": true,
+                    "type": "string"
+                },
+                "image": {
+                    "required": true,
+                    "type": "string"
+                },
+                "thumbnailUrl": {
+                    "required": true,
+                    "type": "string"
+                },
+                "keywords": {
+                    "required": true,
+                    "type": "string"
+                },
+                "brand": {
+                    "required": false,
+                    "type": "string"
+                },
+                "color": {
+                    "required": false,
+                    "type": "string"
+                },
+                "itemCondition": {
+                    "required": false,
+                    "type": "string"
+                },
+                "manufacturer": {
+                    "required": false,
+                    "type": "string"
+                },
+                "model": {
+                    "required": false,
+                    "type": "string"
+                },
+                "sku": {
+                    "required": false,
+                    "type": "string"
+                },
+                "weight": {
+                    "required": false,
+                    "type": "string"
+                },
+                "width": {
+                    "required": false,
+                    "type": "string"
+                },
+                "height": {
+                    "required": false,
+                    "type": "string"
+                },
+                "depth": {
+                    "required": false,
+                    "type": "string"
+                }
+            },
+            "required": true,
+            "type": "object"
+          }
         example: |
           {
-            "kaka": "lala"
+            "product": {
+              "id": "1",
+              "name": "Product One",
+              "description": "This is the full description of the product.",
+              "url": "http://example.com",
+              "image": "http://example.com/image.jpg",
+              "thumbnailUrl": "http://example.com/image-thumb.jpg",
+              "keywords": "western, cowboy",
+              "brand": "Brand Name",
+              "color": "Black",
+              "itemCondition": "New",
+              "manufacturer": "Manufacturer Name",
+              "model": "Black",
+              "sku": "SKU #",
+              "weight": "12 pounds",
+              "width": "12 inches",
+              "height": "12 inches",
+              "depth": "12 inches"
+            }
           }
-  /{bookTitle}:
-    get:
-    put:
-    delete:
-      /author:
-      get:
-      /publisher:
-      get:
-
-/mama:
   get:
+    description: Get a list of products
+    queryParameters:
+      q:
+        description: Search phrase to look for products
+        type: string
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            example: "asd"
+  /{productId}:
+    uriParameters:
+     productId:
+       displayName: Product ID
+       type: integer
+    get:
+      description: Get a single product
+      queryParameters:
+        productId:
+          description: The ID of the product
+          type: integer
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example: "asd"
+    put:
+      description: Updates a single product
+      queryParameters:
+        productId:
+          description: The ID of the product
+          type: integer
+          required: true
+      body:
+        application/json:
+          schema: |
+            {
+              "$schema": "http://json-schema.org/draft-03/schema",
+              "product": {
+                  "name": {
+                      "required": true,
+                      "type": "string"
+                  },
+                  "description": {
+                      "required": true,
+                      "type": "string"
+                  },
+                  "url": {
+                      "required": true,
+                      "type": "string"
+                  },
+                  "image": {
+                      "required": true,
+                      "type": "string"
+                  },
+                  "thumbnailUrl": {
+                      "required": true,
+                      "type": "string"
+                  },
+                  "keywords": {
+                      "required": true,
+                      "type": "string"
+                  },
+                  "brand": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "color": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "itemCondition": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "manufacturer": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "model": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "sku": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "weight": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "width": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "height": {
+                      "required": false,
+                      "type": "string"
+                  },
+                  "depth": {
+                      "required": false,
+                      "type": "string"
+                  }
+              },
+              "required": true,
+              "type": "object"
+            }
+          example: |
+            {
+              "product": {
+                "id": "1",
+                "name": "Product One",
+                "description": "This is the full description of the product.",
+                "url": "http://example.com",
+                "image": "http://example.com/image.jpg",
+                "thumbnailUrl": "http://example.com/image-thumb.jpg",
+                "keywords": "western, cowboy",
+                "brand": "Brand Name",
+                "color": "Black",
+                "itemCondition": "New",
+                "manufacturer": "Manufacturer Name",
+                "model": "Black",
+                "sku": "SKU #",
+                "weight": "12 pounds",
+                "width": "12 inches",
+                "height": "12 inches",
+                "depth": "12 inches"
+              }
+            }
+      responses:
+        200:
+          body:
+            application/json:
+              example: "asd"
+    delete:
+      description: Delete a single product
+      queryParameters:
+        productId:
+          description: The ID of the product
+          type: integer
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example: "asd"

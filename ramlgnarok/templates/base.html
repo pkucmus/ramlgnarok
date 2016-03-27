@@ -9,89 +9,95 @@
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{ api.title }} | {{ api.version }}</title>
-    <link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800italic,800'>
     <link rel="stylesheet" href="{% static 'css/code_hilite/monokai.css' %}">
+    <link href="{% static 'css/jquery.mCustomScrollbar.min.css' %}" rel="stylesheet">
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <div class="container">
-          <h2 class="lone-header">{{ api.title }}</h2>
-        </div>
-      </header>
-      <section>
-        <div class="container">
-          <ul class="docs-nav">
-            <li><strong>Introduction</strong></li>
-            {% for document in api.documentation %}
-              <li><a href="#{{ document.title|slugify }}" class="cc-active">{{ document.title }}</a></li>
-            {% endfor %}
-            <li class="separator"></li>
-            <li><strong>Reference</strong></li>
-            {% for resource in resources %}
-              <li><a href="#{{ resource|slugify }}" class="cc-active">{{ resource }}</a></li>
-            {% endfor %}
-          </ul>
-          <div class="docs-content">
-            <h2> Introduction</h2>
-            {% for document in api.documentation %}
-            <h3 id="{{ document.title|slugify }}"> {{ document.title }}</h3>
-            {{ document.content.raw|md }}
-            {% endfor %}
-
-            <h2> Reference</h2>
-            {% for resource in resources.values %}
-              <h3 id="{{ resource.path|slugify }}">{{ resource.path }}</h3>
-              {{ resource.description.raw|md }}
-
-              {% if resource.query_params %}
-                <h4>Query Params</h4>
-                <table>
-                  <thead>
-                    <th>name</th>
-                    <th>type</th>
-                    <th>example</th>
-                    <th>required</th>
-                  </thead>
-                  <tbody>
-                    {% for query_param in resource.query_params %}
-                      <td>{{ query_param.name }}</td>
-                      <td>{{ query_param.type }}</td>
-                      <td>{{ query_param.example }}</td>
-                      <td>{{ query_param.required }}</td>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              {% endif %}
-
-              {% if resource.method %}
-                <h4>Methods</h4>
-                <ul>
-                {% for method in resource.methods.values %}
-                  <li>
-                    {{ method.method }}
-                    {{ method.body.0|example }}
-                  </li>
-                {% endfor %}
-                </ul>
-              {% endif %}
-
-
-            {% endfor %}
+    <div class="top fixed menu color-g-800">
+      <div class="logo"></div>
+    </div>
+    <div class="container">
+      <div class="side">
+        <div class="item">
+          <div class="header">Introduction</div>
+          <div class="menu">
+              {% for document in api.documentation %}
+                <a href="#{{ document.title|slugify }}" class="item">{{ document.title }}</a>
+              {% endfor %}
           </div>
         </div>
-      </section>
-      <section class="vibrant centered">
-        <div class="">
-          <h4> This documentation template is provided by <a href="http://www.frittt.com" target="_blank">Frittt Templates</a>. You can download and use this template for free. If you have used this template, please pay the developer's effort by Tweeting, sharing on Facebook, social mention or with a linkback. Enjoy! :)</h4>
+        <div class="item">
+          <div class="header">Reference</div>
+          <div class="menu">
+              {% for resource in resources %}
+                <a href="#{{ resource|slugify }}" class="item">{{ resource }}</a>
+              {% endfor %}
+          </div>
         </div>
-      </section>
-      <footer>
-        <div class="">
-          <p> &copy; Copyright Frittt Templates. All Rights Reserved.</p>
-        </div>
-      </footer>
+      </div>
+      <div class="desc">
+        <h1>{{ api.title }}</h1>
+        <h2> Introduction</h2>
+        {% for document in api.documentation %}
+        <h3 id="{{ document.title|slugify }}"> {{ document.title }}</h3>
+        {{ document.content.raw|md }}
+        {% endfor %}
+
+        {% for resource in resources.values %}
+          {% if resource.display_name != resource.name %}
+            <h1>{{ resource.display_name }}</h1>
+          {% endif %}
+          <h2 id="{{ resource.path|slugify }}">{{ resource.name }}</h2>
+          {{ resource.description.raw|md }}
+
+          {% if resource.query_params %}
+            <h4>Query Params</h4>
+            <table>
+              <thead>
+                <th>name</th>
+                <th>type</th>
+                <th>example</th>
+                <th>required</th>
+              </thead>
+              <tbody>
+                {% for query_param in resource.query_params %}
+                  <td>{{ query_param.name }}</td>
+                  <td>{{ query_param.type }}</td>
+                  <td>{{ query_param.example }}</td>
+                  <td>{{ query_param.required }}</td>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+
+          {% if resource.method %}
+            <h4>Methods</h4>
+            <ul>
+            {% for method in resource.methods.values %}
+              <li>
+                {{ method.method }}
+                {{ method.body.0|example }}
+              </li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+
+
+        {% endfor %}
+      </div>
+      <div class="console"></div>
     </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('.side').mCustomScrollbar({'theme': 'minimal-dark', 'scrollInertia': 300});
+        $('.desc').mCustomScrollbar({'theme': 'minimal-dark', 'scrollInertia': 300});
+        $('.console').mCustomScrollbar({'theme': 'minimal', 'scrollInertia': 300});
+      });
+    </script>
   </body>
 </html>
