@@ -1,6 +1,6 @@
 #%RAML 0.8
 
-title: Acme API
+title: Ramlgnarok API
 version: 3
 baseUri: http://127.0.0.1:8000/api/v{version}/
 documentation:
@@ -19,6 +19,16 @@ documentation:
   description: A collection of products
   post:
     description: Create a product
+    headers:
+      Content-Type:
+        displayName: Content Type
+        example: application/json
+      Accept:
+        displayName: Accept
+        description: |
+           Field names prefixed with x-Zencoder-job-metadata- contain user-specified metadata.
+           The API does not validate or use this data. All metadata headers will be stored
+           with the job and returned to the client when this resource is queried.
     body:
       application/json:
         schema: |
@@ -117,11 +127,29 @@ documentation:
           }
   get:
     description: Get a list of products
+    headers:
+      Content-Type:
+        displayName: Content Type
+        example: application/json
+      Accept:
+        displayName: Accept
+        description: |
+           Field names prefixed with x-Zencoder-job-metadata- contain user-specified metadata.
+           The API does not validate or use this data. All metadata headers will be stored
+           with the job and returned to the client when this resource is queried.
     queryParameters:
       q:
         description: Search phrase to look for products
         type: string
         required: false
+      filter:
+        description: Filters the product
+        type: integer
+        required: true
+      filteroni:
+        description: Filters the product
+        type: integer
+        required: true
     responses:
       200:
         body:

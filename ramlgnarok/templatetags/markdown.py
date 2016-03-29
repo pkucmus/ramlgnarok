@@ -23,12 +23,12 @@ def md(content):
 
 
 @register.filter(is_safe=True)
-def example(body):
+def example(body, linenos=False):
     if body:
         example = body.raw[body.mime_type].get('example', None)
 
         if example is not None:
             lexer = get_lexer_for_mimetype(body.mime_type, stripall=True)
-            formatter = HtmlFormatter(linenos=False, cssclass="codehilite")
+            formatter = HtmlFormatter(linenos=linenos, cssclass="codehilite")
             return mark_safe(highlight(example, lexer, formatter))
     return ''

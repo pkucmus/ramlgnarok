@@ -27,6 +27,16 @@ class RAMLDocs(TemplateView):
             resource.children = []
             resource.methods = OrderedDict()
             resource.methods[resource.method] = resource
+
+            if resource.query_params:
+                resource.query_params_optional = []
+                resource.query_params_required = []
+                for query_param in resource.query_params:
+                    if query_param.required:
+                        resource.query_params_required.append(query_param)
+                    else:
+                        resource.query_params_optional.append(query_param)
+
             if resource.parent:
                 resource.parent.children.append(resource)
 
@@ -34,6 +44,7 @@ class RAMLDocs(TemplateView):
                 resources[resource.path].methods[resource.method] = resource
             else:
                 resources[resource.path] = resource
+        # import pdb; pdb.set_trace()
         return {'api': api, 'resources': resources}
 
     def get_context_data(self, **kwargs):

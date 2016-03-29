@@ -2,102 +2,150 @@
 {% load markdown %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="description" content="">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{{ api.title }} | {{ api.version }}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800italic,800'>
-    <link rel="stylesheet" href="{% static 'css/code_hilite/monokai.css' %}">
-    <link href="{% static 'css/jquery.mCustomScrollbar.min.css' %}" rel="stylesheet">
-  </head>
-  <body>
-    <div class="top fixed menu color-g-800">
-      <div class="logo"></div>
-    </div>
-    <div class="container">
-      <div class="side">
-        <div class="item">
-          <div class="header">Introduction</div>
-          <div class="menu">
-              {% for document in api.documentation %}
-                <a href="#{{ document.title|slugify }}" class="item">{{ document.title }}</a>
-              {% endfor %}
-          </div>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>{{ api.title }} | {{ api.version }}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+        <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800italic,800'>
+        <link rel="stylesheet" href="{% static 'css/code_hilite/monokai.css' %}">
+        <link href="{% static 'css/jquery.mCustomScrollbar.min.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="top fixed menu color-g-800">
+            <div class="logo"></div>
         </div>
-        <div class="item">
-          <div class="header">Reference</div>
-          <div class="menu">
-              {% for resource in resources %}
-                <a href="#{{ resource|slugify }}" class="item">{{ resource }}</a>
-              {% endfor %}
-          </div>
-        </div>
-      </div>
-      <div class="desc">
-        <h1>{{ api.title }}</h1>
-        <h2> Introduction</h2>
-        {% for document in api.documentation %}
-        <h3 id="{{ document.title|slugify }}"> {{ document.title }}</h3>
-        {{ document.content.raw|md }}
-        {% endfor %}
-
-        {% for resource in resources.values %}
-          {% if resource.display_name != resource.name %}
-            <h1>{{ resource.display_name }}</h1>
-          {% endif %}
-          <h2 id="{{ resource.path|slugify }}">{{ resource.name }}</h2>
-          {{ resource.description.raw|md }}
-
-          {% if resource.query_params %}
-            <h4>Query Params</h4>
-            <table>
-              <thead>
-                <th>name</th>
-                <th>type</th>
-                <th>example</th>
-                <th>required</th>
-              </thead>
-              <tbody>
-                {% for query_param in resource.query_params %}
-                  <td>{{ query_param.name }}</td>
-                  <td>{{ query_param.type }}</td>
-                  <td>{{ query_param.example }}</td>
-                  <td>{{ query_param.required }}</td>
+        <div class="container">
+            <div class="side">
+                <div class="item">
+                    <div class="header">Introduction</div>
+                    <div class="menu">
+                            {% for document in api.documentation %}
+                                <a href="#{{ document.title|slugify }}" class="item">{{ document.title }}</a>
+                            {% endfor %}
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="header">Reference</div>
+                    <div class="menu">
+                            {% for resource in resources %}
+                                <a href="#{{ resource|slugify }}" class="item">{{ resource }}</a>
+                            {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="desc">
+                <h1>{{ api.title }}</h1>
+                <h2> Introduction</h2>
+                {% for document in api.documentation %}
+                <h3 id="{{ document.title|slugify }}"> {{ document.title }}</h3>
+                {{ document.content.raw|md }}
                 {% endfor %}
-              </tbody>
-            </table>
-          {% endif %}
 
-          {% if resource.method %}
-            <h4>Methods</h4>
-            <ul>
-            {% for method in resource.methods.values %}
-              <li>
-                {{ method.method }}
-                {{ method.body.0|example }}
-              </li>
-            {% endfor %}
-            </ul>
-          {% endif %}
+                {% for resource in resources.values %}
+                    {% if resource.display_name != resource.name %}
+                        <h1>{{ resource.display_name }}</h1>
+                    {% endif %}
+                    <h2 id="{{ resource.path|slugify }}">{{ resource.name }}</h2>
+                    {{ resource.description.raw|md }}
+
+                    {% if resource.query_params_required %}
+                        <table class="params">
+                            <thead>
+                                <th colspan="2">Required parameters</th>
+                            </thead>
+                            <tbody>
+                                {% for query_param in resource.query_params_required %}
+                                <tr>
+                                    <td class="name">{{ query_param.name }}</td>
+                                    <td>{{ query_param.description }} <code>{{ query_param.type }}</code></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+
+                    {% if resource.query_params_optional %}
+                        <table class="params">
+                            <thead>
+                                <th colspan="2">Optional parameters</th>
+                            </thead>
+                            <tbody>
+                                {% for query_param in resource.query_params_optional %}
+                                <tr>
+                                    <td class="name">{{ query_param.name }}</td>
+                                    <td>{{ query_param.description }} <code>{{ query_param.type }}</code></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+
+                    {% if resource.method %}
+                        <table class="methods">
+                            <tbody>
+                                {% for method in resource.methods.values %}
+                                <tr>
+                                    <td class="name">{{ method.method }}</td>
+                                    <td>{{ method.description }}</td>
+                                    <td class="more"><i class="fa fa-chevron-right"></i></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
 
 
-        {% endfor %}
-      </div>
-      <div class="console"></div>
-    </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
-    <script type="text/javascript">
-      $(document).ready(function(){
-        $('.side').mCustomScrollbar({'theme': 'minimal-dark', 'scrollInertia': 300});
-        $('.desc').mCustomScrollbar({'theme': 'minimal-dark', 'scrollInertia': 300});
-        $('.console').mCustomScrollbar({'theme': 'minimal', 'scrollInertia': 300});
-      });
-    </script>
-  </body>
+                {% endfor %}
+            </div>
+            <div class="console">
+                {% for resource in resources.values %}
+                    {% for method in resource.methods.values %}
+                        <div class="method" id="{{ method.path|slugify }}_{{ method.method }}">
+                            <div class="switcher">
+                                <a class="btn left"><i class="fa fa-times"></i></a>
+                                <a class="btn right">Console</a>
+                            </div>
+                            <div class="head darker">
+                                <a class="btn shallow">{{ method.method }}</a>
+                                <code>{{ method.path }}</code>
+                            </div>
+                            <div class="section">Request</div>
+                            <div class="section-body darker">
+                                <p class="text-right"><a class="btn">Try</a></p>
+                                <div class="scenario">
+                                    <h4>Scenario Description</h4>
+                                    <p>{{ method.description }}</p>
+                                    {% if method.headers %}
+                                        <h4>Headers</h4>
+                                        {% for header in method.headers %}
+                                            <p><code>{{ header.name }}{% if header.example %}: {{ header.example }}{% endif %}</code></p>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <h4>Body</h4>
+                                    {{ method.body.0|example:True }}
+                                </div>
+                            </div>
+                            <div class="section">Request</div>
+                            <div class="section-body darker">Response</div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.side').mCustomScrollbar({'theme': 'minimal-dark', 'scrollInertia': 300});
+                $('.desc').mCustomScrollbar({'theme': 'minimal-dark', 'scrollInertia': 300});
+                $('.console').mCustomScrollbar({'theme': 'minimal', 'scrollInertia': 300});
+            });
+        </script>
+    </body>
 </html>
